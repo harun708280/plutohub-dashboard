@@ -74,7 +74,7 @@ const SeeBlog = () => {
           return (
             <ul key={index} className="  my-2 ">
               {items.map((item, i) => (
-                <li key={i} className="flex gap-2">
+                <li key={i} className="flex mt-4 gap-2">
                   {" "}
                   <CircleCheckBig /> {renderItem(item)}
                 </li>

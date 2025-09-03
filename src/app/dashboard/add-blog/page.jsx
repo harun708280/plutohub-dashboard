@@ -1,6 +1,6 @@
 "use client";
 import AddBlog from "@/components/AddBlog/AddBlog";
-import SeeBlog from "@/components/SeeBlog/SeeBlog";
+import SeeBlog from "@/components/PreviewBlog/PreviewBlog";
 import React from "react";
 
 const AddBlogPage = () => {
