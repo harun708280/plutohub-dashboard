@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useContext } from "react";
-import editorTools from "@/components/AddBlog/editorTools";
+import React, { useState, useContext, useRef } from "react";
+import dynamic from "next/dynamic";
 import { BlogContext } from "@/context/BlogContext";
 
-// Simple debounce function
+// Debounce helper
 const debounce = (fn, delay) => {
   let timer;
   return (...args) => {
@@ -13,102 +13,56 @@ const debounce = (fn, delay) => {
   };
 };
 
+// Dynamic import Editor component (client-only)
+const AddBlogEditor = dynamic(() => import("./AddBlogEditor"), { ssr: false });
+
 export default function AddBlog() {
   const { blogData, setBlogData } = useContext(BlogContext);
 
-  const [preview, setPreview] = useState(blogData.image || "/banner.png");
   const [title, setTitle] = useState(blogData.title || "");
+  const [preview, setPreview] = useState(blogData.image || "/banner.png");
   const [uploading, setUploading] = useState(false);
-
   const fileInputRef = useRef();
-  const editorRef = useRef(null);
 
-  // Debounced Context update for Title
+  // Debounced title update
   const updateTitleContext = useRef(
     debounce((value) => {
-      setBlogData((prev) => ({
-        ...prev,
-        title: value,
-      }));
+      setBlogData((prev) => ({ ...prev, title: value }));
     }, 300)
   ).current;
 
- 
-  useEffect(() => {
-    let editor;
-    const initEditor = async () => {
-      const EditorJS = (await import("@editorjs/editorjs")).default;
-      if (!editorRef.current) {
-        editor = new EditorJS({
-          holder: "editorjs",
-          placeholder: "Write your awesome story here...",
-          tools: editorTools,
-          onChange: async () => {
-            try {
-              const savedData = await editor.save();
-              setBlogData((prev) => ({
-                ...prev,
-                content: savedData,
-                image: preview || "/banner.png",
-                title: prev.title || "",
-              }));
-            } catch (err) {
-              console.error("EditorJS save error:", err);
-            }
-          },
-        });
-        editorRef.current = editor;
-      }
-    };
-
-    if (typeof window !== "undefined") {
-      initEditor();
-    }
-
-    return () => {
-      editorRef.current?.destroy?.();
-      editorRef.current = null;
-    };
-  }, [preview, setBlogData]);
-
   const handleTitleChange = (e) => {
-    const value = e.target.value || "";
+    const value = e.target.value;
     setTitle(value);
     updateTitleContext(value);
   };
 
-  const handleChange = async (e) => {
+  const handleTitleResize = (e) => {
+    const input = e.target;
+    input.style.height = "auto";
+    input.style.height = input.scrollHeight + "px";
+  };
+
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const tempPreview = URL.createObjectURL(file);
     setPreview(tempPreview);
 
-    await handleUpload(file, tempPreview);
-  };
-
-  const handleUpload = async (file, tempPreview) => {
     setUploading(true);
-    const formData = new FormData();
-    formData.append("image", file);
-
     try {
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
+      const formData = new FormData();
+      formData.append("image", file);
+
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
       if (!res.ok) throw new Error("Upload failed");
 
       const data = await res.json();
       const finalUrl = data.url || tempPreview;
       setPreview(finalUrl);
 
-      setBlogData((prev) => ({
-        ...prev,
-        image: finalUrl,
-        title: prev.title || "",
-        content: prev.content || null,
-      }));
+      setBlogData((prev) => ({ ...prev, image: finalUrl }));
     } catch (err) {
       console.error(err);
       alert("Upload failed");
@@ -117,25 +71,16 @@ export default function AddBlog() {
     }
   };
 
-  const handleTitleKeyDown = (e) => {
-    const input = e.target;
-    input.style.height = "auto";
-    input.style.height = input.scrollHeight + "px";
-  };
-
   return (
-    <div className="blogContent ">
+    <div className="blogContent">
       <h1 className="text-xl font-bold mb-4 text-white">New Blog</h1>
 
+      {/* Banner Image */}
       <div
         className="mb-4 cursor-pointer w-full h-[400px] border border-white/5 rounded-lg overflow-hidden relative"
         onClick={() => fileInputRef.current.click()}
       >
-        <img
-          src={preview || "/banner.png"}
-          alt="Blog Banner"
-          className="w-full h-full object-cover"
-        />
+        <img src={preview} alt="Blog Banner" className="w-full h-full object-cover" />
         {uploading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/40">
             <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -143,37 +88,28 @@ export default function AddBlog() {
         )}
       </div>
 
+      <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileChange} />
+
+      {/* Category */}
       <input
-        type="file"
-        ref={fileInputRef}
-        className="hidden"
-        onChange={handleChange}
+        type="text"
+        placeholder="Category"
+        value={blogData.category || ""}
+        onChange={(e) => setBlogData((prev) => ({ ...prev, category: e.target.value }))}
+        className="w-full py-2 mt-4 outline-none text-white placeholder-white opacity-90 border-b border-white/20 bg-transparent pb-4"
       />
 
-      <div className="blog-comment">
-        <input
-          type="text"
-          placeholder="Category"
-          value={blogData.category}
-          onChange={(e) =>
-            setBlogData((prev) => ({ ...prev, category: e.target.value }))
-          }
-          className="w-full  py-2 mt-4 outline-none  text-white placeholder-white opacity-90 border-b border-white/20  bg-transparent pb-4"
-        />
+      {/* Blog Title */}
+      <textarea
+        placeholder="Blog Title"
+        value={title}
+        onChange={handleTitleChange}
+        onInput={handleTitleResize}
+        className="text-3xl font-medium w-full outline-none resize-none overflow-hidden mt-10 leading-tight placeholder:opacity-90 placeholder-white opacity-90 border-b border-white/20 bg-transparent pb-4 text-white"
+      />
 
-        <textarea
-          placeholder="Blog Title"
-          value={title}
-          onChange={handleTitleChange}
-          onInput={handleTitleKeyDown}
-          className="text-3xl font-medium w-full outline-none resize-none overflow-hidden mt-10 leading-tight placeholder:opacity-90 placeholder-white opacity-90 border-b border-white/20  bg-transparent pb-4 text-white"
-        />
-
-        <div
-          id="editorjs"
-          className="prose lg:prose-xl mt-6 text-white border-b border-white/20 bg-transparent pb-4"
-        />
-      </div>
+      {/* EditorJS */}
+      <AddBlogEditor preview={preview} setBlogData={setBlogData} />
     </div>
   );
 }

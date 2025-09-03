@@ -172,7 +172,13 @@
 .ce-toolbar__plus:hover{
   background-color: rgba(255, 255, 255, 0.1);
 }
+.ce-toolbar__settings-btn{
+color: white;
+}
 
+.ce-toolbar__settings-btn:hover{
+  background-color: rgba(255, 255, 255, 0.1);
+}
 .codex-editor__redactor{
   padding-bottom: 10px !important;
   color: white !important;
