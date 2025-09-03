@@ -8,6 +8,7 @@ export const BlogProvider = ({ children }) => {
     title: "",
     content: null,
     image: "/banner.png",
+    category: "",
   });
 
   return (

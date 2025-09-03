@@ -140,3 +140,58 @@
 .ce-block h4 {
   font-size: 1.5rem; /* 24px */
 }
+
+.blogContent {
+  background: rgba(0, 230, 118, 0.4);
+
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+
+  padding: 20px;
+
+  backdrop-filter: blur(34px);
+  opacity: 1;
+}
+.blogContent-sidebar {
+  background: rgba(0, 230, 118, 0.4);
+  backdrop-filter: blur(34px);
+  opacity: 1;
+}
+
+.blog-comment {
+  opacity: 1;
+  border-radius: 24px;
+  padding: 24px;
+  margin-top: 40px;
+  background: rgba(255, 255, 255, 0.2);
+  
+}
+.ce-toolbar__plus{
+  color: white;
+}
+.ce-toolbar__plus:hover{
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.codex-editor__redactor{
+  padding-bottom: 10px !important;
+  color: white !important;
+}
+
+.codex-editor [data-placeholder-active]:empty:before, .codex-editor [data-placeholder-active][data-empty=true]:before {
+    pointer-events: none;
+    color: white;
+    cursor: text;
+}
+
+.blog-card-category {
+  display: inline-block;
+  padding: 8px 14px;
+  border-radius: 100px;
+  background: #4b6bfb;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+
+  margin-bottom: 16px;
+}
