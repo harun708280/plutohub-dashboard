@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useContext } from "react";
-import EditorJS from "@editorjs/editorjs";
 import editorTools from "@/lib/editorTools";
 import { BlogContext } from "@/context/BlogContext";
 
@@ -34,32 +33,40 @@ export default function AddBlog() {
     }, 300)
   ).current;
 
-  // Initialize EditorJS
+ 
   useEffect(() => {
-    if (!editorRef.current) {
-      const editor = new EditorJS({
-        holder: "editorjs",
-        placeholder: "Write your awesome story here...",
-        tools: editorTools,
-        onChange: async () => {
-          try {
-            const savedData = await editor.save();
-            setBlogData((prev) => ({
-              ...prev,
-              content: savedData,
-              image: preview || "/banner.png",
-              title: prev.title || "",
-            }));
-          } catch (err) {
-            console.error("EditorJS save error:", err);
-          }
-        },
-      });
-      editorRef.current = editor;
+    let editor;
+    const initEditor = async () => {
+      const EditorJS = (await import("@editorjs/editorjs")).default;
+      if (!editorRef.current) {
+        editor = new EditorJS({
+          holder: "editorjs",
+          placeholder: "Write your awesome story here...",
+          tools: editorTools,
+          onChange: async () => {
+            try {
+              const savedData = await editor.save();
+              setBlogData((prev) => ({
+                ...prev,
+                content: savedData,
+                image: preview || "/banner.png",
+                title: prev.title || "",
+              }));
+            } catch (err) {
+              console.error("EditorJS save error:", err);
+            }
+          },
+        });
+        editorRef.current = editor;
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      initEditor();
     }
 
     return () => {
-      editorRef.current?.destroy();
+      editorRef.current?.destroy?.();
       editorRef.current = null;
     };
   }, [preview, setBlogData]);
@@ -109,10 +116,11 @@ export default function AddBlog() {
       setUploading(false);
     }
   };
+
   const handleTitleKeyDown = (e) => {
     const input = e.target;
-    input.style.height = "auto"; // reset height
-    input.style.height = input.scrollHeight + "px"; // expand to fit content
+    input.style.height = "auto";
+    input.style.height = input.scrollHeight + "px";
   };
 
   return (
@@ -158,7 +166,7 @@ export default function AddBlog() {
           value={title}
           onChange={handleTitleChange}
           onInput={handleTitleKeyDown}
-          className="text-3xl font-medium w-full outline-none resize-none overflow-hidden mt-10 leading-tight placeholder:opacity-90 placeholder-white opacity-90 border-b border-white/20 bg-transparent pb-4 text-white"
+          className="text-3xl font-medium w-full outline-none resize-none overflow-hidden mt-10 leading-tight placeholder:opacity-90 placeholder-white opacity-90 border-b border-white/20  bg-transparent pb-4 text-white"
         />
 
         <div
