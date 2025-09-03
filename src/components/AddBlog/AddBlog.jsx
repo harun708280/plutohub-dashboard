@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect, useContext } from "react";
-import editorTools from "@/lib/editorTools";
+import editorTools from "@/components/AddBlog/editorTools";
 import { BlogContext } from "@/context/BlogContext";
 
 // Simple debounce function
