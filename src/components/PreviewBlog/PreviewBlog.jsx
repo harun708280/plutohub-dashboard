@@ -9,9 +9,28 @@ import {
   CircleCheckBig,
 } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const SeeBlog = () => {
-  const { blogData } = useContext(BlogContext);
+  const { blogData,setBlogData } = useContext(BlogContext);
+  const router = useRouter();
+
+
+   const handlePublish = async () => {
+    
+    
+      setBlogData({
+        title: "",
+        content: null,
+        image: "/banner.png",
+        categories: [],
+        shortDesc: "",
+      });
+
+      
+      router.push("/dashboard");
+    
+  };
 
   if (!blogData) return <p>No blog data available</p>;
 
@@ -192,7 +211,7 @@ const SeeBlog = () => {
         )}
 
       <div className="mt-6 flex justify-end">
-        <button className="theme_btn">
+        <button className="theme_btn " onClick={handlePublish}>
           {" "}
           Publish Now
           <div className="arrow_icon">
