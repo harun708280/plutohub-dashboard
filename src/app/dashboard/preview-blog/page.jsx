@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import Pre from './page';
 import SeeBlog from '@/components/PreviewBlog/PreviewBlog';
