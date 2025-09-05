@@ -2,9 +2,9 @@
 
 import React, { useState, useContext, useRef } from "react";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { BlogContext } from "@/context/BlogContext";
-
-// Debounce helper
+import { ArrowUpRight } from "lucide-react";
 const debounce = (fn, delay) => {
   let timer;
   return (...args) => {
@@ -13,7 +13,6 @@ const debounce = (fn, delay) => {
   };
 };
 
-// Dynamic import Editor component (client-only)
 const AddBlogEditor = dynamic(() => import("./AddBlogEditor"), { ssr: false });
 
 export default function AddBlog() {
@@ -24,7 +23,6 @@ export default function AddBlog() {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef();
 
-  // Debounced title update
   const updateTitleContext = useRef(
     debounce((value) => {
       setBlogData((prev) => ({ ...prev, title: value }));
@@ -55,7 +53,10 @@ export default function AddBlog() {
       const formData = new FormData();
       formData.append("image", file);
 
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
       if (!res.ok) throw new Error("Upload failed");
 
       const data = await res.json();
@@ -75,12 +76,15 @@ export default function AddBlog() {
     <div className="blogContent">
       <h1 className="text-xl font-bold mb-4 text-white">New Blog</h1>
 
-      {/* Banner Image */}
       <div
         className="mb-4 cursor-pointer w-full h-[400px] border border-white/5 rounded-lg overflow-hidden relative"
         onClick={() => fileInputRef.current.click()}
       >
-        <img src={preview} alt="Blog Banner" className="w-full h-full object-cover" />
+        <img
+          src={preview}
+          alt="Blog Banner"
+          className="w-full h-full object-cover"
+        />
         {uploading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/40">
             <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -88,18 +92,13 @@ export default function AddBlog() {
         )}
       </div>
 
-      <input type="file" ref={fileInputRef} className="hidden" onChange={handleFileChange} />
-
-      {/* Category */}
       <input
-        type="text"
-        placeholder="Category"
-        value={blogData.category || ""}
-        onChange={(e) => setBlogData((prev) => ({ ...prev, category: e.target.value }))}
-        className="w-full py-2 mt-4 outline-none text-white placeholder-white opacity-90 border-b border-white/20 bg-transparent pb-4"
+        type="file"
+        ref={fileInputRef}
+        className="hidden"
+        onChange={handleFileChange}
       />
 
-      {/* Blog Title */}
       <textarea
         placeholder="Blog Title"
         value={title}
@@ -108,8 +107,19 @@ export default function AddBlog() {
         className="text-3xl font-medium w-full outline-none resize-none overflow-hidden mt-10 leading-tight placeholder:opacity-90 placeholder-white opacity-90 border-b border-white/20 bg-transparent pb-4 text-white"
       />
 
-      {/* EditorJS */}
       <AddBlogEditor preview={preview} setBlogData={setBlogData} />
+
+      <div className="mt-6 flex justify-end">
+        <Link href="/dashboard/preview-blog">
+          <button className="theme_btn">
+            {" "}
+            See Preview{" "}
+            <div className="arrow_icon">
+              <ArrowUpRight />
+            </div>
+          </button>
+        </Link>
+      </div>
     </div>
   );
 }

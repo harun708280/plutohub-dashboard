@@ -5,10 +5,11 @@ export const BlogContext = createContext();
 
 export const BlogProvider = ({ children }) => {
   const [blogData, setBlogData] = useState({
-    title: "",
+     title: "",
+    shortDesc: "",  
     content: null,
     image: "/banner.png",
-    category: "",
+    categories: [], 
   });
 
   return (

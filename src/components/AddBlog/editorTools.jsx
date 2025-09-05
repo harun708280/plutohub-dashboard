@@ -1,5 +1,3 @@
-// src/lib/editorTools.js
-
 import Header from "@editorjs/header";
 import EditorjsList from '@editorjs/list';
 import Paragraph from "@editorjs/paragraph";

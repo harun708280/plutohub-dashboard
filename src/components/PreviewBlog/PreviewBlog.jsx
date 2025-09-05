@@ -2,22 +2,26 @@
 
 import { useContext } from "react";
 import { BlogContext } from "@/context/BlogContext";
-import { CircleCheckBig } from "lucide-react";
+import {
+  ArrowBigLeft,
+  ArrowLeft,
+  ArrowUpRight,
+  CircleCheckBig,
+} from "lucide-react";
+import Link from "next/link";
 
 const SeeBlog = () => {
   const { blogData } = useContext(BlogContext);
 
   if (!blogData) return <p>No blog data available</p>;
 
- 
   const renderItem = (item) => {
     if (typeof item === "string") return item;
 
     if (typeof item === "object") {
-     
       if ("content" in item) return item.content;
       if ("text" in item) return item.text;
-      return JSON.stringify(item); 
+      return JSON.stringify(item);
     }
 
     return String(item);
@@ -147,7 +151,17 @@ const SeeBlog = () => {
 
   return (
     <div className="blogContent text-white">
-      <h3 className="text-xl font-bold mb-4">Preview</h3>
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-bold ">Preview</h3>
+        <Link href="/dashboard/add-blog">
+          <button className="theme_btn2">
+            <div className="arrow_icon">
+              <ArrowLeft />
+            </div>
+            Back to Edit
+          </button>
+        </Link>
+      </div>
       {blogData.image && (
         <img
           src={blogData.image}
@@ -156,16 +170,36 @@ const SeeBlog = () => {
         />
       )}
 
-      {blogData.category && (
-        <span className="blog-card-category">{blogData.category}</span>
+      {blogData.categories?.length > 0 && (
+        <div className="flex flex-wrap gap-2 mb-4">
+          {blogData.categories.map((cat, i) => (
+            <span key={i} className="blog-card-category">
+              {cat}
+            </span>
+          ))}
+        </div>
       )}
 
       <h1 className="text-3xl font-bold mb-6">{blogData.title}</h1>
+
+      {blogData.shortDesc && (
+        <p className="text-white mb-4">{blogData.shortDesc}</p>
+      )}
 
       {blogData.content?.blocks?.length > 0 &&
         blogData.content.blocks.map((block, index) =>
           renderBlock(block, index)
         )}
+
+      <div className="mt-6 flex justify-end">
+        <button className="theme_btn">
+          {" "}
+          Publish Now
+          <div className="arrow_icon">
+            <ArrowUpRight />
+          </div>
+        </button>
+      </div>
     </div>
   );
 };

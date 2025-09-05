@@ -1,23 +1,15 @@
 import { AppSidebar } from "@/components/app-sidebar";
-import { ChartAreaInteractive } from "@/components/chart-area-interactive";
-import { DataTable } from "@/components/data-table";
-import { SectionCards } from "@/components/section-cards";
+
 import { SiteHeader } from "@/components/site-header";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 
-import data from "./data.json";
-
 export default function Page({ children }) {
   return (
-    <SidebarProvider
-      className=" bg-gray-900"
-    >
+    <SidebarProvider className=" ">
       <AppSidebar variant="inset" />
       <SidebarInset>
         <SiteHeader />
-        <div className="-mt-2">
-          {children}
-        </div>
+        <div className="-mt-2">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );

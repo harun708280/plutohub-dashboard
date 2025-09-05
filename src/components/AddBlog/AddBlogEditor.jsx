@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useContext } from "react";
 import editorTools from "@/components/AddBlog/editorTools";
+import { BlogContext } from "@/context/BlogContext";
 
-export default function AddBlogEditor({ preview, setBlogData }) {
+export default function AddBlogEditor({ preview }) {
+  const { blogData, setBlogData } = useContext(BlogContext);
   const editorRef = useRef(null);
 
   useEffect(() => {
@@ -19,6 +21,7 @@ export default function AddBlogEditor({ preview, setBlogData }) {
           holder: "editorjs",
           placeholder: "Write your awesome story here...",
           tools: editorTools,
+          data: blogData.content || {}, 
           onChange: async () => {
             try {
               const savedData = await editorInstance.save();
@@ -39,11 +42,8 @@ export default function AddBlogEditor({ preview, setBlogData }) {
 
     initEditor();
 
-    return () => {
-      editorRef.current?.destroy?.();
-      editorRef.current = null;
-    };
-  }, [preview, setBlogData]);
+   
+  }, [preview, setBlogData, blogData.content]);
 
   return (
     <div

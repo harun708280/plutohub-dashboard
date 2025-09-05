@@ -43,7 +43,7 @@ const blogData = [
 
 const Blog = () => {
   return (
-    <div className=" px-4 py-8 space-y-8  w-full">
+    <div className="  py-8 space-y-8  w-full">
       {blogData.map((blog) => (
         <div
           key={blog.id}
