@@ -96,7 +96,7 @@ const data = {
 
 export function AppSidebar({ ...props }) {
   return (
-    <Sidebar className=' blogContent-sidebar' collapsible="offcanvas" {...props}>
+    <Sidebar className=' text-gray-950' collapsible="offcanvas" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>

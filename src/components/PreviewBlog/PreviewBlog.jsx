@@ -2,35 +2,14 @@
 
 import { useContext } from "react";
 import { BlogContext } from "@/context/BlogContext";
-import {
-  ArrowBigLeft,
-  ArrowLeft,
-  ArrowUpRight,
-  CircleCheckBig,
-} from "lucide-react";
+import { ArrowLeft, ArrowUpRight, CircleCheckBig } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import { Button } from "../ui/button";
 
 const SeeBlog = () => {
-  const { blogData,setBlogData } = useContext(BlogContext);
-  const router = useRouter();
+  const { blogData, setBlogData } = useContext(BlogContext);
 
-
-   const handlePublish = async () => {
-    
-    
-      setBlogData({
-        title: "",
-        content: null,
-        image: "/banner.png",
-        categories: [],
-        shortDesc: "",
-      });
-
-      
-      router.push("/dashboard");
-    
-  };
+  console.log(blogData);
 
   if (!blogData) return <p>No blog data available</p>;
 
@@ -53,7 +32,7 @@ const SeeBlog = () => {
       case "header": {
         const HeaderTag = `h${block.data.level || 2}`;
         return (
-          <HeaderTag key={index} className="my-4 font-bold text-white">
+          <HeaderTag key={index} className="my-4 font-bold text-black">
             {block.data.text}
           </HeaderTag>
         );
@@ -61,7 +40,7 @@ const SeeBlog = () => {
 
       case "paragraph":
         return (
-          <p key={index} className="my-2 text-white leading-relaxed">
+          <p key={index} className="my-2 text-gray-800 leading-relaxed">
             {block.data.text}
           </p>
         );
@@ -168,19 +147,51 @@ const SeeBlog = () => {
     }
   };
 
+  const handlePublish = (e) => {
+    e.preventDefault();
+
+    const formData = {
+      title: blogData.title,
+      shortDesc: blogData.shortDesc,
+      image: blogData.image,
+      content: blogData.content,
+      categories: blogData.categories,
+    };
+
+    console.log("Publishing blog data:", formData);
+
+    setBlogData({
+      title: "",
+      shortDesc: "",
+      content: null,
+      image: "/banner.png",
+      categories: [],
+    });
+  };
+
   return (
-    <div className="blogContent text-white">
+    <form className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-md transition-colors duration-300">
+      <input type="hidden" name="title" value={blogData.title} />
+      <input type="hidden" name="shortDesc" value={blogData.shortDesc} />
+      <input type="hidden" name="image" value={blogData.image} />
+      <input
+        type="hidden"
+        name="content"
+        value={JSON.stringify(blogData.content)}
+      />
+      {blogData.categories?.map((cat, i) => (
+        <input key={i} type="hidden" name="categories" value={cat} />
+      ))}
+
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-bold ">Preview</h3>
         <Link href="/dashboard/add-blog">
-          <button className="theme_btn2">
-            <div className="arrow_icon">
-              <ArrowLeft />
-            </div>
-            Back to Edit
-          </button>
+          <Button type="submit" className="w-full">
+            <ArrowLeft /> Back to Edit
+          </Button>
         </Link>
       </div>
+
       {blogData.image && (
         <img
           src={blogData.image}
@@ -202,24 +213,21 @@ const SeeBlog = () => {
       <h1 className="text-3xl font-bold mb-6">{blogData.title}</h1>
 
       {blogData.shortDesc && (
-        <p className="text-white mb-4">{blogData.shortDesc}</p>
+        <p className="text-gray-800 mb-4">{blogData.shortDesc}</p>
       )}
 
-      {blogData.content?.blocks?.length > 0 &&
-        blogData.content.blocks.map((block, index) =>
-          renderBlock(block, index)
-        )}
+      {blogData.content?.blocks?.map((block, index) =>
+        renderBlock(block, index)
+      )}
 
       <div className="mt-6 flex justify-end">
-        <button className="theme_btn " onClick={handlePublish}>
-          {" "}
-          Publish Now
-          <div className="arrow_icon">
-            <ArrowUpRight />
-          </div>
-        </button>
+       
+         <Button type="submit" className="w-full" onClick={handlePublish}>
+                 Publish Now
+          <ArrowUpRight />
+                </Button>
       </div>
-    </div>
+    </form>
   );
 };
 

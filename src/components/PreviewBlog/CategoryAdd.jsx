@@ -41,18 +41,18 @@ const CategoryAdd = () => {
 
   return (
     <div className="">
-      <div className="blogContent">
-        <p className="text-white mb-2 text-lg">Select Categories</p>
+      <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-md transition-colors duration-300">
+        <p className="text-gray-800 mb-2 text-lg">Select Categories</p>
 
         <div className="flex flex-wrap gap-2">
           {CATEGORY_OPTIONS.map((cat) => (
             <button
               key={cat}
               onClick={() => handleCategoryToggle(cat)}
-              className={`px-3 py-1 rounded-full border ${
+              className={`px-3 py-1 rounded-full border  ${
                 blogData.categories.includes(cat)
                   ? "bg-blue-600 text-white border-blue-600"
-                  : "bg-transparent text-white border-white/30"
+                  : "bg-transparent text-gray-800 border-gray-400"
               }`}
             >
               {cat}
@@ -82,7 +82,7 @@ const CategoryAdd = () => {
             rows={4}
             value={shortDesc}
             onChange={handleDescChange}
-            className="w-full resize-none mt-4 text-white placeholder-white opacity-90 border-b border-white/20 bg-transparent pb-2 outline-none"
+            className="w-full resize-none mt-4 text-gray-800 placeholder-gray-800 opacity-90 border-b border-gray-400 bg-transparent pb-2 outline-none"
           />
           <div
             className={`text-sm mt-1 flex justify-end ${

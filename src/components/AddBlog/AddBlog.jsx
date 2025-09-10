@@ -4,7 +4,9 @@ import React, { useState, useContext, useRef } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { BlogContext } from "@/context/BlogContext";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Loader2 } from "lucide-react";
+import { Button } from "../ui/button";
+
 const debounce = (fn, delay) => {
   let timer;
   return (...args) => {
@@ -73,11 +75,13 @@ export default function AddBlog() {
   };
 
   return (
-    <div className="blogContent">
-      <h1 className="text-xl font-bold mb-4 text-white">New Blog</h1>
+    <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-md transition-colors duration-300">
+      <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
+        New Blog
+      </h1>
 
       <div
-        className="mb-4 cursor-pointer w-full h-[400px] border border-white/5 rounded-lg overflow-hidden relative"
+        className="mb-6 cursor-pointer w-full h-[400px] border border-gray-300 dark:border-gray-700 rounded-lg overflow-hidden relative hover:ring-2 hover:ring-indigo-500 transition-all duration-300"
         onClick={() => fileInputRef.current.click()}
       >
         <img
@@ -104,20 +108,25 @@ export default function AddBlog() {
         value={title}
         onChange={handleTitleChange}
         onInput={handleTitleResize}
-        className="text-3xl font-medium w-full outline-none resize-none overflow-hidden mt-10 leading-tight placeholder:opacity-90 placeholder-white opacity-90 border-b border-white/20 bg-transparent pb-4 text-white"
+        className="text-3xl font-semibold w-full outline-none resize-none overflow-hidden mb-6 leading-snug placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white border-b border-gray-300 dark:border-gray-700 pb-3 bg-transparent transition-colors duration-300"
       />
 
       <AddBlogEditor preview={preview} setBlogData={setBlogData} />
 
       <div className="mt-6 flex justify-end">
         <Link href="/dashboard/preview-blog">
-          <button className="theme_btn">
-            {" "}
-            See Preview{" "}
-            <div className="arrow_icon">
-              <ArrowUpRight />
-            </div>
-          </button>
+          <Button type="submit" className="w-full" disabled={uploading}>
+
+            {uploading ? (
+                    <span className="flex items-center justify-center gap-2">
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                     
+                    </span>
+                  ) : (
+                    <span className="flex gap-3 items-center">See Preview  <ArrowUpRight/></span>
+                  )}
+            
+          </Button>
         </Link>
       </div>
     </div>
