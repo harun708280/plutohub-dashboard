@@ -138,25 +138,25 @@ export const userList = async () => {
 };
 
 /** ---------- Get User Profile ---------- */
-export const getUserProfile = async () => {
-  try {
-    const session = await auth();
-    const email = session?.user?.email;
-    if (!email) return { user: null };
+// export const getUserProfile = async () => {
+//   try {
+//     const session = await auth();
+//     const email = session?.user?.email;
+//     if (!email) return { user: null };
 
-    const user = await prisma.user.findUnique({
-      where: { email },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true,
-      },
-    });
+//     const user = await prisma.user.findUnique({
+//       where: { email },
+//       select: {
+//         id: true,
+//         name: true,
+//         email: true,
+//         createdAt: true,
+//       },
+//     });
 
-    return { user };
-  } catch (err) {
-    console.error("getUserProfile error:", err);
-    return { user: null };
-  }
-};
+//     return { user };
+//   } catch (err) {
+//     console.error("getUserProfile error:", err);
+//     return { user: null };
+//   }
+// };
