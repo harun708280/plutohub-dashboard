@@ -1,97 +1,191 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
-import { Heart, MessageCircle } from "lucide-react";
-
+import { Table, Space, Dropdown } from "antd";
+import {
+  HeartOutlined,
+  MessageOutlined,
+  MoreOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+} from "@ant-design/icons";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 const blogData = [
   {
     id: 1,
-    title: "The Impact of Technology on the Workplace: How Technology is Changing",
-    banner: "https://via.placeholder.com/800x400.png?text=Blog+Banner+1",
+    title:
+      "The Impact of Technology on the Workplace: How Technology is Changing",
     author: {
       name: "Harun Or Rashid",
       avatar: "https://via.placeholder.com/40.png?text=HR",
     },
     likes: 120,
     comments: 15,
+    date: "2025-09-10",
   },
   {
     id: 2,
-    title: "The Impact of Technology on the Workplace: How Technology is Changing",
-    banner: "https://via.placeholder.com/800x400.png?text=Blog+Banner+2",
+    title:
+      "The Impact of Technology on the Workplace: How Technology is Changing",
     author: {
       name: "Arif Ahmed",
       avatar: "https://via.placeholder.com/40.png?text=AA",
     },
     likes: 85,
     comments: 10,
+    date: "2025-09-11",
   },
   {
     id: 3,
-    title: "The Impact of Technology on the Workplace: How Technology is Changing",
-    banner: "https://via.placeholder.com/800x400.png?text=Blog+Banner+3",
+    title:
+      "The Impact of Technology on the Workplace: How Technology is Changing",
     author: {
       name: "Fatema Begum",
       avatar: "https://via.placeholder.com/40.png?text=FB",
     },
     likes: 200,
     comments: 30,
+    date: "2025-09-12",
+  },
+  {
+    id: 4,
+    title: "Next.js 15 Released: What's New and Improved",
+    author: {
+      name: "Sabbir Hossain",
+      avatar: "https://via.placeholder.com/40.png?text=SH",
+    },
+    likes: 90,
+    comments: 12,
+    date: "2025-09-08",
+  },
+  {
+    id: 5,
+    title: "Exploring Tailwind CSS v4: The Future of Styling",
+    author: {
+      name: "Nusrat Jahan",
+      avatar: "https://via.placeholder.com/40.png?text=NJ",
+    },
+    likes: 150,
+    comments: 25,
+    date: "2025-09-07",
+  },
+  {
+    id: 6,
+    title: "Understanding Prisma with PostgreSQL",
+    author: {
+      name: "Rakibul Hasan",
+      avatar: "https://via.placeholder.com/40.png?text=RH",
+    },
+    likes: 60,
+    comments: 7,
+    date: "2025-09-05",
   },
 ];
 
-const Blog = () => {
-  return (
-    <div className="  py-8 space-y-8  w-full">
-      {blogData.map((blog) => (
-        <div
-          key={blog.id}
-          className=" rounded-lg overflow-hidden shadow-lg flex w-full border border-white/20"
+const BlogTable = () => {
+  const getMenuItems = (record) => [
+    {
+      key: "edit",
+      label: (
+        <span>
+          <EditOutlined className="mr-2 text-blue-600" />
+          Edit
+        </span>
+      ),
+    },
+    {
+      key: "delete",
+      label: (
+        <span>
+          <DeleteOutlined className="mr-2 text-red-600" />
+          Delete
+        </span>
+      ),
+    },
+    {
+      key: "view",
+      label: (
+        <span>
+          <EyeOutlined className="mr-2" />
+          View
+        </span>
+      ),
+    },
+  ];
+
+  const columns = [
+    {
+      title: "Author",
+      dataIndex: "author",
+      key: "author",
+      render: (author) => (
+        <Space>
+          <Avatar className="h-8 w-8 rounded-lg">
+            <AvatarImage  src="https://res.cloudinary.com/dygtjjkso/image/upload/v1756888859/blogs/thfxbtjf2ur8q7erskhe.webp"
+              alt="" />
+          </Avatar>
+          <span>{author.name}</span>
+        </Space>
+      ),
+    },
+    {
+      title: "Title",
+      dataIndex: "title",
+      key: "title",
+      render: (title) => <span className="font-medium">{title}</span>,
+    },
+    
+    {
+      title: " Date",
+      dataIndex: "date",
+      key: "date",
+      render: (date) => <span>{new Date(date).toLocaleDateString()}</span>,
+    },
+    {
+      title: "Comments",
+      key: "stats",
+      render: (_, record) => (
+        <Space>
+         
+          <span>
+            <MessageOutlined className="mr-1" />
+            {record.comments}
+          </span>
+        </Space>
+      ),
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      render: (_, record) => (
+        <Dropdown
+          menu={{ items: getMenuItems(record) }}
+          trigger={["click"]}
+          placement="bottomRight"
         >
-        
-          <div className="relative w-[400px] h-[200px]">
-            <Image
-              src='/blog-banner.png'
-              alt={blog.title}
-              fill
-              className="object-cover"
-              priority={true} 
-            />
-          </div>
+          <MoreOutlined className="text-xl cursor-pointer" />
+        </Dropdown>
+      ),
+    },
+  ];
 
-          <div className="p-6">
-     
-            <div className="flex items-center space-x-4 mb-4">
-              <div className="relative w-10 h-10">
-                <Image
-                   src='/blog-banner.png'
-                  alt={blog.author.name}
-                  fill
-                  className="rounded-full object-cover"
-                />
-              </div>
-              <span className="text-white font-medium">{blog.author.name}</span>
-            </div>
-
-            <h2 className="text-2xl font-bold text-white mb-4">{blog.title}</h2>
-
-            
-            <div className="flex items-center space-x-6 text-gray-400">
-              <span className="flex items-center space-x-1">
-                <Heart className="w-5 h-5 text-red-500" />
-                <span>{blog.likes}</span>
-              </span>
-              <span className="flex items-center space-x-1">
-                <MessageCircle className="w-5 h-5" />
-                <span>{blog.comments}</span>
-              </span>
-            </div>
-          </div>
-        </div>
-      ))}
+  return (
+    <div className="py-6">
+      <Table
+        dataSource={blogData}
+        columns={columns}
+        rowKey="id"
+        pagination={{
+          pageSize: 5,
+          showSizeChanger: true,
+          pageSizeOptions: ["5", "10", "20"],
+        }}
+        bordered={false}
+      />
     </div>
   );
 };
 
-export default Blog;
+export default BlogTable;

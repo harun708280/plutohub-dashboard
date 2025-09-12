@@ -19,7 +19,7 @@ import {
   IconUsers,
   IconPlus,
 } from "@tabler/icons-react";
-
+import { Folder } from "lucide-react"; 
 import { NavDocuments } from "@/components/nav-documents";
 import { NavMain } from "@/components/nav-main";
 import { NavSecondary } from "@/components/nav-secondary";
@@ -45,6 +45,12 @@ const data = {
       title: "Dashboard",
       url: "/dashboard",
       icon: IconListDetails,
+    },
+    
+    {
+      title: "Category",
+      url: "/dashboard/add-category",
+      icon: Folder,
     },
     {
       title: "Add-Blog",

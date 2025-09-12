@@ -9,8 +9,6 @@ import { Button } from "../ui/button";
 const SeeBlog = () => {
   const { blogData, setBlogData } = useContext(BlogContext);
 
-  console.log(blogData);
-
   if (!blogData) return <p>No blog data available</p>;
 
   const renderItem = (item) => {
@@ -50,15 +48,15 @@ const SeeBlog = () => {
 
         if (block.data.style === "ordered") {
           return (
-            <ol key={index} className=" list-decimal my-2">
+            <ol key={index} className="list-decimal my-2">
               {items.map((item, i) => (
-                <li key={i}> {renderItem(item)}</li>
+                <li key={i}>{renderItem(item)}</li>
               ))}
             </ol>
           );
         } else if (block.data.style === "checklist") {
           return (
-            <ul key={index} className=" my-2">
+            <ul key={index} className="my-2">
               {items.map((item, i) => (
                 <li key={i} className="flex items-center gap-2">
                   <input
@@ -74,10 +72,9 @@ const SeeBlog = () => {
           );
         } else {
           return (
-            <ul key={index} className="  my-2 ">
+            <ul key={index} className="my-2">
               {items.map((item, i) => (
                 <li key={i} className="flex mt-4 gap-2">
-                  {" "}
                   <CircleCheckBig /> {renderItem(item)}
                 </li>
               ))}
@@ -95,7 +92,7 @@ const SeeBlog = () => {
               className="w-full rounded-md object-cover"
             />
             {block.data.caption && (
-              <p className="text-sm text-white mt-5">{block.data.caption}</p>
+              <p className="text-sm text-white mt-2">{block.data.caption}</p>
             )}
           </div>
         ) : null;
@@ -150,16 +147,18 @@ const SeeBlog = () => {
   const handlePublish = (e) => {
     e.preventDefault();
 
+    
     const formData = {
       title: blogData.title,
       shortDesc: blogData.shortDesc,
       image: blogData.image,
-      content: blogData.content,
+      content: JSON.stringify(blogData.content), 
       categories: blogData.categories,
     };
 
     console.log("Publishing blog data:", formData);
 
+  
     setBlogData({
       title: "",
       shortDesc: "",
@@ -170,7 +169,10 @@ const SeeBlog = () => {
   };
 
   return (
-    <form className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-md transition-colors duration-300">
+    <form
+      onSubmit={handlePublish}
+      className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl p-6 shadow-md transition-colors duration-300"
+    >
       <input type="hidden" name="title" value={blogData.title} />
       <input type="hidden" name="shortDesc" value={blogData.shortDesc} />
       <input type="hidden" name="image" value={blogData.image} />
@@ -180,13 +182,13 @@ const SeeBlog = () => {
         value={JSON.stringify(blogData.content)}
       />
       {blogData.categories?.map((cat, i) => (
-        <input key={i} type="hidden" name="categories" value={cat} />
+        <input key={i} type="hidden" name="categories" value={cat?.id} />
       ))}
 
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xl font-bold ">Preview</h3>
+        <h3 className="text-xl font-bold">Preview</h3>
         <Link href="/dashboard/add-blog">
-          <Button type="submit" className="w-full">
+          <Button type="button" className="w-full">
             <ArrowLeft /> Back to Edit
           </Button>
         </Link>
@@ -204,7 +206,7 @@ const SeeBlog = () => {
         <div className="flex flex-wrap gap-2 mb-4">
           {blogData.categories.map((cat, i) => (
             <span key={i} className="blog-card-category">
-              {cat}
+              {cat.name}
             </span>
           ))}
         </div>
@@ -221,11 +223,10 @@ const SeeBlog = () => {
       )}
 
       <div className="mt-6 flex justify-end">
-       
-         <Button type="submit" className="w-full" onClick={handlePublish}>
-                 Publish Now
+        <Button type="submit" className="w-full">
+          Publish Now
           <ArrowUpRight />
-                </Button>
+        </Button>
       </div>
     </form>
   );

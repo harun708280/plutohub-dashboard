@@ -6,6 +6,7 @@ import Link from "next/link";
 import { BlogContext } from "@/context/BlogContext";
 import { ArrowUpRight, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
+import { Spin } from "antd";
 
 const debounce = (fn, delay) => {
   let timer;
@@ -91,7 +92,7 @@ export default function AddBlog() {
         />
         {uploading && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-            <div className="w-12 h-12 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+              <Spin size="large"  />
           </div>
         )}
       </div>
@@ -115,7 +116,7 @@ export default function AddBlog() {
 
       <div className="mt-6 flex justify-end">
         <Link href="/dashboard/preview-blog">
-          <Button type="submit" className="w-full" disabled={uploading}>
+          <Button type="submit" className="w-full !text-white" disabled={uploading}>
 
             {uploading ? (
                     <span className="flex items-center justify-center gap-2">
